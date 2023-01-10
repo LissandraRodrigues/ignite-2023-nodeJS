@@ -7,6 +7,7 @@ class InverseNumberStream extends Transform {
 
     _transform(chunk, enconding, callback) {
 
+
         const transformed = Number(chunk.toString()) * -1
        
         console.log(transformed)
@@ -17,11 +18,19 @@ class InverseNumberStream extends Transform {
 
 }
 
-const server = http.createServer((request, response) => {
+const server = http.createServer(async (request, response) => {
     
-    return request
-        .pipe(new InverseNumberStream())
-        .pipe(response)
+    const buffers = []
+
+    for await (const chunk of request) {
+        buffers.push(chunk)
+    }
+
+    const fullStreamContent = Buffer.concat(buffers).toString()
+
+    console.log(fullStreamContent)
+
+    return response.end(fullStreamContent)
 
 })
 
