@@ -40,7 +40,24 @@ export const routes = [
 
             database.delete('users', id)
 
-            return response.writeHead(204)
+            return response.writeHead(204).end()
+        }
+    },
+    {
+        method: 'PUT',
+        path: buildRoutePath('/users/:id'),
+        handler: (request, response) => {
+            const { id } = request.params
+            const { name, email } = request.body
+
+            const data = {
+                name,
+                email
+            }
+
+            database.update('users', id, data)
+
+            return response.writeHead(204).end()
         }
     }
 ]
